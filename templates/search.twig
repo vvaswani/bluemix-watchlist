@@ -1,0 +1,38 @@
+{% extends 'home.twig' %}
+
+    {% block content %}
+    
+    <h3 class="display-6">Search Results</h3>
+    {% if results|length > 0 %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Title</th>
+          <th scope="col">Release date</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for result in results %}
+        {% if result.media_type != 'person' %}
+        <tr>
+          <td>{{ result.id }}</td>
+          <td>{{ result.title ? result.title|e : result.name|e }}</td>
+          <td>{{ result.release_date ? result.release_date|date("M Y") : result.first_air_date|date("M Y") }}</td>
+          {% if result.title %}
+          <td><a href="{{ path_for('save', {'type':'movie', 'id':result.id}) }}" class="btn btn-success">Add</a></td>
+          {% else %}
+          <td><a href="{{ path_for('save', {'type':'tv', 'id':result.id}) }}" class="btn btn-success">Add</a></td>          
+          {% endif %}
+        </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+    </table>
+    <strong>This product uses the TMDb API but is not endorsed or certified by TMDb. </strong>
+    {% else %}
+    No matches found
+    {% endif %}
+            
+    {% endblock %}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </head>
+  <body style="padding-top: 95px">
+
+    <div class="container">
+      <div class="row">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top justify-content-between">
+          <a href="{{ path_for('home') }}" class="btn btn-success">Home</a>    
+          <form method="post" action="{{ path_for('search') }}" class="form-inline">
+            <div class="form-group mx-sm-3">
+              <input name="q" type="text" value="{{ q }}" class="form-control" placeholder="Enter search term" />
+            </div>
+            <button type="submit" name="submit" class="btn btn-primary">Go</button>
+          </form>        
+        </nav>
+      </div>
+    </div>
+    
+    <!-- content area -->
+    <div class="container" style="text-align: left">
+    {% block content %}
+      <h3 class="display-6">My List</h3>
+      {% if items|length > 0 %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Type</th>
+            <th scope="col">Status</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.doc.id }}</td>
+            <td>{{ item.doc.title|e }}</td>
+            <td>{{ item.doc.type == 'movie' ? 'Movie' : 'TV' }}</td>
+            <td>{{ item.doc.status == 1 ? 'Unwatched' : 'Watched' }}</td>
+            <td><a href="{{ item.doc.status == 1 ? path_for('update-status', {'id':item.doc._id ~ '.' ~ item.doc._rev, 'status':0}) : path_for('update-status', {'id':item.doc._id ~ '.' ~ item.doc._rev, 'status':1}) }}" class="btn btn-success btn-sm">{{ item.doc.status == 1 ? 'Watched it!' : 'Watch it again!' }}</a></td>
+            <td><a href="{{ path_for('search-similar', {'id':item.doc.id, 'type':item.doc.type}) }}" class="btn btn-success btn-sm">Find similar</a></td>
+            <td><a href="{{ path_for('delete', {'id':item.doc._id ~ '.' ~ item.doc._rev}) }}" class="btn btn-danger btn-sm">Remove from list</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      No items found.
+      {% endif %}
+    {% endblock %}
+    </div>        
+    <!-- content area ends-->
+      
+    <!-- footer -->
+    <div class="container">
+    </div> 
+    <!-- footer ends -->
+
+     
+  </body>
+</html>

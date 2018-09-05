@@ -1,0 +1,14 @@
+<?php
+// config.php.sample
+$config = [
+  'settings' => [
+    'displayErrorDetails' => true,
+    'db' => [
+      'uri' => 'CLOUDANT-URI',
+      'name' => 'watchlist'
+    ],
+    'tmdb' => [
+      'key' => 'API-KEY'
+    ]
+  ]
+];
